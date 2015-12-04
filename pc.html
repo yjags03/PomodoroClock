@@ -1,0 +1,221 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Pomodoro Clock</title>
+    <meta charset="utf-8" />
+
+    <script src="js/jquery-2.1.4.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <script src="jquery-circle-progress-master/jquery-circle-progress-master/dist/circle-progress.js"></script>    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+
+
+    <style>
+        .main_div{
+            margin: 10px;
+           
+        }
+
+        .bottom_space {
+            margin-bottom: 8px;
+        }
+
+        #circle {
+            margin-left: 20px;
+        }
+
+        .circle {
+            width: 100px;
+            margin: 6px 6px 20px;
+            display: inline-block;
+            position: relative;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+            .circle strong {
+                position: absolute;
+                top: 70px;
+                left: 45px;
+                width: 100%;
+                text-align: center;
+                line-height: 40px;
+                font-size: 30px;
+            }
+
+            .circle #tomoto_image{
+                position: absolute;
+                top: 100px;
+                left: 45px;
+                width: 100%;                
+            }
+
+            #pomodoro_timer{
+                border:2px solid orange;
+            }
+
+            .btn-bottom_space{
+                margin-bottom: 5px;
+            }
+    </style>
+
+    <script>
+        $(function () {
+            $("#circle").circleProgress({
+                value: 0.0,
+                size: 250,
+                emptyFill: "#0000FF",
+                startAngle: -(Math.PI/2),
+                fill: {
+                    gradient: ["orange", "red"]
+                }
+            }).on('circle-animation-progress', function (event, progress, stepValue) {
+               // $(this).find('strong').text(String(stepValue.toFixed(2)).substr(1));
+            }).on('circle-animation-start', function (event) {
+                
+            });
+        });
+
+        $(document).ready(function () {
+
+            $("#btn_session_inc").on("click", function () {
+                var btn_session = $("#btn_session").text();
+                var inc_session = parseInt(btn_session, 10) + 1;
+                //alert("HEllo");
+                //alert(inc_session);
+                $("#btn_session").text(inc_session);
+            });
+
+            $("#btn_session_dec").on("click", function () {
+                var btn_session = $("#btn_session").text();
+                var dec_session = parseInt(btn_session, 10) - 1;
+                //alert("HEllo");
+                //alert(inc_session);
+                $("#btn_session").text(dec_session);
+            });
+
+            $("#btn_break_inc").on("click", function () {
+                var btn_break = $("#btn_break").text();
+                var inc_break = parseInt(btn_break, 10) + 1;
+                //alert("HEllo");
+                //alert(inc_session);
+                $("#btn_break").text(inc_break);
+            });
+
+            $("#btn_break_dec").on("click", function () {
+                var btn_break = $("#btn_break").text();
+                var dec_break = parseInt(btn_break, 10) - 1;
+                //alert("HEllo");
+                //alert(inc_session);
+                $("#btn_break").text(dec_break);
+            });
+
+            $("#play").on("click", function () {
+                alert("In Play");
+                var session_length = $('#btn_session').text();
+                clock(session_length * 60, 0);
+            });
+
+            $("#pause").on("click", function () {
+                alert("In Pause");
+            });
+
+            $("#stop").on("click", function () {
+                alert("In Stop");
+            });
+
+
+        });
+
+        function clock(total_time, elapsed_seconds) {           
+            var s = elapsed_seconds % 60;
+            var m = Math.floor(elapsed_seconds / 60);          
+            
+            $("#circle").find('strong').text(remaining_time(total_time, elapsed_seconds));
+            $('#circle').circleProgress('value', (elapsed_seconds/total_time));
+            if (total_time == elapsed_seconds) return;
+            elapsed_seconds++;           
+
+            setTimeout(function () {
+                clock(total_time, elapsed_seconds);
+            }, 1000);
+        }
+
+        function remaining_time(total_time, elapsed_time) {
+            var remaining_minutes = Math.floor((total_time - elapsed_time) / 60);
+            var remaining_seconds = (total_time - elapsed_time) % 60;
+            return remaining_minutes + ':' + remaining_seconds;
+        }
+
+    </script>
+</head>
+<body>
+    <div class="container-fluid main_div">
+        <div class="row bottom_space">
+            <div class="col-xs-12">
+                <h1 class="text-primary text-center">Yarams Pomodoro Clock</h1>
+            </div>
+        </div>
+        <div class="row bottom_space">
+            <div class="col-xs-6 col-xs-offset-3 bg-info text-center">
+                <h4><a href="http://www.freecodecamp.com" target="_blank">Free Code Camp</a></h4>
+                <h4>Basic Front End Development Projects</h4>
+                <h4>zipline: Build a Pomodoro Clock</h4>
+            </div>
+        </div>
+
+        <div class="row bottom_space">
+            <div class="col-xs-6 col-md-4 col-xs-offset-4">
+                <div class="settings">
+                    <div class="row">
+                        <div class="col-xs-6 col-md-4">
+                            <div id="break_length">
+                                <label>Break Length</label>
+                                <div class="row">
+                                    <button id="btn_break_dec" class="btn btn-default">-</button>
+                                    <button id="btn_break" class="btn btn-default">5</button>
+                                    <button id="btn_break_inc" class="btn btn-default">+</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-6 col-md-4">
+                            <div id="session_length">
+                                <label>Session Length</label>
+                                <div class="row">
+                                    <button id="btn_session_dec" class="btn btn-default">-</button>
+                                    <button id="btn_session" class="btn btn-default">15</button>
+                                    <button id="btn_session_inc" class="btn btn-default">+</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row bottom_space">
+            <div class="col-md-3 col-md-offset-4" id="pomodoro_timer">
+                <div id="circle" class="pomodoro circle">
+                    <strong></strong>
+                    <img id="tomoto_image" src="pomodoro.jpg" width="50" height="50" class="img-responsive"/>
+                    <div><button class="btn btn-info">Session</button></div>
+                </div>
+                
+            </div>
+            <div class="col-md-5">
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class="controls">
+                            <button id="play" class="btn btn-success btn-bottom_space"><i class="fa fa-play"></i></button><br />
+                            <button id="pause" class="btn btn-info btn-bottom_space"><i class="fa fa-pause"></i></button><br />
+                            <button id="stop" class="btn btn-danger btn-bottom_space"><i class="fa fa-stop"></i></button><br />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
